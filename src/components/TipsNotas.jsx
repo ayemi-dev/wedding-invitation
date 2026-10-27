@@ -1,0 +1,35 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+// Importa la imagen de fondo
+import backgroundImage from '../assets/Fondo/background.jpg';
+
+const TipsNotas = () => {
+  return (
+    <div className="min-h-screen bg-lightIvory py-12 bg-cover bg-center"
+    style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
+      <div className="bg-lightIvory bg-opacity-70 container mx-auto px-4 text-center font-GreatVibes">
+        <h2 className="text-5xl text-emeraldGreen mb-8">Tips y Notas</h2>
+        <ul className="text-2xl md:text-4xl text-lightBrown list-disc list-inside">
+          <li className="mb-4">Llega a tiempo para disfrutar de cada momento especial.</li>
+          <li className="mb-4">Respeta el código de vestimenta sugerido.</li>
+          <li className="mb-4">Evita usar tu teléfono móvil durante la ceremonia.</li>
+          <li className="mb-4">Disfruta de la música y el baile.</li>
+          <li className="mb-4">Si consumes alcohol, hazlo de manera responsable.</li>
+          <li className="mb-4">Respeta a los demás invitados y al personal del evento.</li>
+          <li className="mb-4">Diviértete y celebra este día especial con nosotros.</li>
+        </ul>
+        <div className="mt-8">
+          <Link 
+            to="/" 
+            className="px-4 py-2 bg-emeraldGreen text-white text-2xl rounded-full hover:bg-brownLight transition duration-300"
+          >
+            Volver a Inicio
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TipsNotas;

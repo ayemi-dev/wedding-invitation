@@ -1,0 +1,47 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import ReceptionMap from './ReceptionMap';
+// Importa la imagen de fondo
+import backgroundImage from '../assets/Fondo/background.jpg';
+
+const ReceptionLocation = () => {
+  return (
+    <div className="min-h-screen font-GreatVibes bg-lightIvory py-12 bg-cover bg-center"
+    style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-5xl  text-emeraldGreen">Recepción</h2>
+          <p className="bg-white bg-opacity-70 text-2xl text-lightBrown mt-4">
+            <a
+              href="https://www.google.com/maps/place/Hacienda+Azalaga/"
+              title="Haz clic para ver el mapa en Google Maps"
+              target="_blank"
+              rel="noreferrer"
+              className="text-brown"
+            >
+              <strong>Hacienda Azalaga</strong>
+            </a>
+            <br />
+            Abundio Gómez S/N, La Urbana o La Chinampa, 55789 Santa María Tonanitla, Méx.
+          </p>
+          <p className="text-brown mt-4 text-2xl">
+              Sabado 14 de Diciembre 2024
+              <br />
+              17:45 hrs
+              </p>
+        </div>
+        <div className="mb-12">
+          <ReceptionMap />
+        </div>
+        <div className="text-center mt-12">
+          <Link to="/" className="px-4 py-2 bg-emeraldGreen text-ivoryWhite rounded-full hover:bg-limeGreen transition duration-300 text-2xl">
+            Volver a la página principal
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ReceptionLocation;

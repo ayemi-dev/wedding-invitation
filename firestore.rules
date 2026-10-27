@@ -1,0 +1,98 @@
+rules_version = '2';
+
+// Reglas de seguridad de Firestore · invitación de boda Yazmin & Agustín
+// Proyecto: mywedding-144c2
+//
+// CONTEXTO
+// La boda fue el 14 de diciembre de 2024. El sitio sigue publicado como
+// recuerdo y como demostración pública, así que la base pasa a solo lectura.
+//
+// POR QUÉ EXISTE ESTE ARCHIVO
+// Hasta ahora el proyecto no tenía reglas en el repositorio y la base estaba
+// en modo abierto: cualquier persona podía leer Y escribir todas las
+// colecciones llamando directo a la API REST, sin pasar por la página ni por
+// la pantalla de inicio de sesión. El muro de login solo escondía el
+// contenido en la interfaz; no protegía los datos.
+//
+// Medido sobre producción antes de aplicar estas reglas, sin credenciales:
+//   invitados       48 documentos   lectura y escritura abiertas
+//   ListaDeRegalos  44 documentos   lectura y escritura abiertas
+//   Playlist        11 documentos   lectura y escritura abiertas
+//   BuenosDeseos     9 documentos   lectura y escritura abiertas
+//
+// Lo más delicado es 'invitados': 48 fichas con nombre, pases asignados,
+// pases confirmados, asistencia y regalo elegido. Datos de terceros.
+//
+// CRITERIO
+//   · Lectura pública únicamente en lo que la invitación pinta en pantalla.
+//   · Escritura denegada en todo. El evento ya pasó; no hay nada que capturar.
+//   · 'invitados' cerrado también a lectura: guarda nombre, número de pases
+//     y confirmaciones de terceros.
+//
+// DESPLIEGUE
+//   firebase deploy --only firestore:rules
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------------------------------------------------------------- //
+    // Solo lectura pública                                             //
+    // ---------------------------------------------------------------- //
+
+    // Mensajes que los invitados dejaron para mostrarse en la invitación.
+    // Solo llevan nombre y mensaje, sin datos de contacto.
+    // Lee: src/components/firebaseComponents/BuenosDeseos.jsx
+    match /BuenosDeseos/{documento} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Catálogo de regalos con su bandera 'reservado'.
+    // Lee: src/components/ListaDeRegalos.jsx
+    match /ListaDeRegalos/{documento} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Canciones sugeridas para la fiesta.
+    // Lee: src/components/Musica.jsx
+    match /Playlist/{documento} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ---------------------------------------------------------------- //
+    // Cerrado por completo                                             //
+    // ---------------------------------------------------------------- //
+
+    // Datos personales de los invitados: nombre, pases asignados, pases
+    // confirmados, asistencia a ceremonia y recepción, regalos elegidos.
+    // Ni lectura ni escritura, con sesión o sin ella.
+    match /invitados/{documento} {
+      allow read, write: if false;
+    }
+
+    // Misma colección con mayúscula inicial, por si quedó algo suelto.
+    match /Invitados/{documento} {
+      allow read, write: if false;
+    }
+
+    // Resto de una prueba de conexión antigua
+    // (src/components/firebaseComponents/FirestoreTest.jsx, sin ruta).
+    match /testCollection/{documento} {
+      allow read, write: if false;
+    }
+
+    // ---------------------------------------------------------------- //
+    // Todo lo demás                                                    //
+    // ---------------------------------------------------------------- //
+    //
+    // No hace falta ninguna cláusula aquí: Firestore deniega por omisión
+    // cualquier ruta que ninguna regla permita. Cualquier colección que no
+    // aparezca arriba queda cerrada a lectura y a escritura.
+    //
+    // A propósito NO se pone un 'match /{documento=**}' con deny: los match
+    // se combinan con OR, así que un deny no anula los allow de arriba, pero
+    // tampoco añade protección. Es ruido que invita a equivocarse.
+  }
+}
